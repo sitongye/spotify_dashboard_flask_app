@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Spotify API Flask App</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #333333;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 72px;
+            margin: 0;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        p {
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        button {
+            background-color: #1DB954;
+            color: #ffffff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 500px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #1ED760;
+            box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo {
+            width: 200px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer {
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #1DB954;
+            text-decoration: none;
+            border-bottom: 1px solid #1DB954;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .footer a:hover {
+            color: #ffffff;
+            border-bottom: 1px solid #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img class="logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png"
+            alt="Spotify Logo">
+        <h1>Discover new music.</h1>
+        <p>Connect your Spotify account and start listening to your favorite songs and playlists today!</p>
+        <a href={{ authlink }}>
+            <button>Connect with Spotify</button>
+        </a>
+        <div class="footer">
+            Powered by <a href="https://www.spotify.com/" target="_blank">Spotify</a>
+        </div>
+    </div>
+</body>
+
+</html>
