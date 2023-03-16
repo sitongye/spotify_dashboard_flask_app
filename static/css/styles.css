@@ -108,6 +108,79 @@ h1 {
     text-overflow: ellipsis;
 }
 
+.track-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.playlist-container {
+    margin-top: 30px;
+    float:left;
+    background-color: #403737;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: scroll;
+    height: 700px;
+    /* Change the height as desired */
+    width: 30%;
+    /* Change the width as desired */
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.track-image-container {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.track-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
+
+.track-details {
+    flex: 1;
+}
+
+.track-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.track-artist {
+    margin-bottom: 0;
+}
+
+.track-preview-container {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    margin-left: 15px;
+}
+
+.playlist-tracks {
+    margin-left: 20px;
+}
+
+audio::-webkit-media-controls-play-button {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-color: #1db954;
+    border-radius: 50%;
+    float: right;
+}
+
 /* Footer styles */
 
 footer {

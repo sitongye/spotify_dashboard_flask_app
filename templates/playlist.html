@@ -1,54 +1,26 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+<div class="container playlist-container">
+	<h2>{{ playlist_name }}</h2>
+	<div class="playlist-tracks">
+		{% for track in tracks %}
+		<div class="track">
+			<div class="track-image-container">
+				<img src="{{ track.album_image }}" alt="{{ track.album_name }}" class="track-image">
+			</div>
+			<div class="track-details">
+				<p class="track-name">{{ track.name }}</p>
+				<p class="track-artist">{{ track.artist_ids }}</p>
+				<audio controls>
+					<source src="{{ track.preview_url }}" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
 
-<head>
-    <title>My Playlists - Spotify</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
 
-<body>
-    <!-- Header -->
-    <header>
-        <div class="header-container">
-            <a href="#" class="logo">Spotify</a>
-            <nav>
-                <ul>
-                    <li><a href="#">Premium</a></li>
-                    <li><a href="#">Help</a></li>
-                    <li><a href="#">Download</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Main content -->
-    <main>
-        <div class="container">
-            <h1>My Playlists</h1>
-
-            {% if playlists %}
-            <ul class="playlists">
-                {% for playlist in playlists %}
-                <li>
-                    <a href="{{ playlist.external_urls.spotify }}" target="_blank">
-                        <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }}">
-                        <h2>{{ playlist.name }}</h2>
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>You don't have any playlists yet.</p>
-            {% endif %}
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 Spotify AB</p>
-        </div>
-    </footer>
-</body>
-
-</html>
+{% endblock %}

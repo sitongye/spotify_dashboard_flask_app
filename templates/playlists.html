@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+My Playlist Spotify
+{% endblock %}
+<!-- Main content -->
+{% block content %}
+<div class="container">
+    <h1>My Playlists</h1>
+
+    {% if playlists %}
+    <ul class="playlists">
+        {% for playlist in playlists %}
+        <li>
+            <a href="{{ url_for('playlist', playlist_id=playlist.id) }}" target="_blank">
+                <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }}">
+                <h2>{{ playlist.name }}</h2>
+            </a>
+        </li>
+
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You don't have any playlists yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+
+</html>

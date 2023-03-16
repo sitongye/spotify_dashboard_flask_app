@@ -1,19 +1,16 @@
 APScheduler==3.6.3
 async-timeout==4.0.2
-#black @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_d0nhgmyc3l/croots/recipe/black_1660237813406/work
 cachelib==0.10.2
 cachetools==4.1.0
 certifi==2019.3.9
 chardet==3.0.4
 charset-normalizer==3.1.0
-#click @ file:///opt/concourse/worker/volumes/live/709f530a-8ffd-4e02-4f5f-9b3cfddd0e0b/volume/click_1646056616410/work
 dominate==2.3.5
 Flask==2.2.3
 Flask-Bootstrap==3.3.7.1
 Flask-Session==0.4.0
 Flask-SQLAlchemy==2.4.3
 Flask-WTF==0.14.2
-#flit_core @ file:///opt/conda/conda-bld/flit-core_1644941570762/work/source/flit_core
 google-api-core==1.17.0
 google-auth==1.16.0
 google-cloud-core==1.3.0
@@ -27,8 +24,6 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 mypy-extensions==0.4.3
-#pathspec @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_b8rj_doxjl/croot/pathspec_1674681570418/work
-#platformdirs @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_7fs8_2xgrm/croots/recipe/platformdirs_1662711383474/work
 protobuf==3.12.2
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -41,8 +36,6 @@ rsa==4.0
 six==1.16.0
 spotipy==2.22.1
 SQLAlchemy==1.3.17
-#tomli @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_90762ba4-f339-47e8-bd29-416854a59b233d27hku_/croots/recipe/tomli_1657175507767/work
-#typing_extensions @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_4b7xacf029/croot/typing_extensions_1669923792404/work
 tzlocal==2.1
 urllib3==1.26.14
 visitor==0.1.3
