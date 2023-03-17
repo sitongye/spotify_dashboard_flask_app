@@ -1,4 +1,12 @@
 /* Global styles */
+:root {
+    --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --color-primary: #2d9a53 !important;
+}
+
+.navbar {
+    background-color: #121212 !important;
+}
 
 body {
     margin: 0;
@@ -23,7 +31,8 @@ a {
 /* Header styles */
 
 header {
-    background-color: #121212;
+    background-color: #121212 !important; 
+    color: #121212;
     padding: 20px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     position: fixed;
@@ -176,7 +185,7 @@ audio::-webkit-media-controls-play-button {
     display: block;
     width: 24px;
     height: 24px;
-    background-color: #1db954;
+    background-color: #2d9a53;
     border-radius: 50%;
     float: right;
 }

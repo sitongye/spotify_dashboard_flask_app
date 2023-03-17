@@ -2,6 +2,7 @@ import pandas as pd
 
 def get_trackdetails(spotify_client, track_id, usr_filter=None):
     result = spotify_client.track(track_id)
+    print(result.get("preview_url"))
     filtered = {i: result[i] for i in ["id", "name", "disc_number", "track_number", "preview_url"]}
     album = result.get("album")
     filtered["album_image"] = album.get("images")[0].get("url")

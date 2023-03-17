@@ -11,7 +11,7 @@ My Playlist Spotify
     <ul class="playlists">
         {% for playlist in playlists %}
         <li>
-            <a href="{{ url_for('playlist', playlist_id=playlist.id) }}" target="_blank">
+            <a href="{{ url_for('dashplaylist.dash_playlist', playlist_id=playlist.id) }}" target="_blank">
                 <img src="{{ playlist.images[0].url }}" alt="{{ playlist.name }}">
                 <h2>{{ playlist.name }}</h2>
             </a>
