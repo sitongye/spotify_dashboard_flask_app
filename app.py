@@ -2,18 +2,21 @@ import os
 import dash
 import spotipy
 from dotenv import load_dotenv
-from flask import Flask, redirect, request, session, render_template
+from flask import Flask, redirect, request, session, render_template, url_for
 from flask_session import Session
 from utils.playlist_utils import get_playlistdetails
-from utils.track_utils import get_trackdetails
+from utils.track_utils import get_trackdetails, get_audio_features_df
 from utils.user_utils import get_userdetails, get_currentusrplaylists
-from models import db, User, Playlist
-from dash_playlistdashboard.playlist import render_dashplaylistlayout
+from models import db, User, Playlist, Track
+from dash_playlistdashboard.playlist import render_dashplaylistlayout, gen_card
 from flask.blueprints import Blueprint
-from dash import html
+from dash import html, dcc, Output, Input
+from dash.dependencies import Input, Output
+import pandas as pd
+import dash_mantine_components as dmc
 
 load_dotenv()
-EXTERNAL_STYLESHEET = ["/static/css/styles.css"]
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(64)
@@ -33,34 +36,44 @@ def insert_user(userprofile_dict):
     user_data = userprofile_dict
     # Check if user exists in database
     user = User.query.filter_by(id=user_data.get("id")).first()
-    new_user = User(**user_data)
+    new_user = User(user_data)
     if user:
         # User already exists in database, update the existing record
         db.session.merge(new_user)
     else:
 
         db.session.add(new_user)
-        db.session.commit()
+    db.session.commit()
 
 
 def insert_playlist(playlistdetailsdict):
     # Check if playlist exists in database
     playlist = Playlist.query.filter_by(id=playlistdetailsdict.get("id")).first()
-    new_plt = Playlist(**playlistdetailsdict)
+    new_plt = Playlist(playlistdetailsdict)
     if playlist:
         # User already exists in database, update the existing record
         db.session.merge(new_plt)
     else:
         db.session.add(new_plt)
-        db.session.commit()
+    db.session.commit()
 
+def insert_or_update_tracks(tracks_data):
+    for track_data in tracks_data:
+        track_id = track_data['id']
+        track = Track.query.filter_by(id=track_id).first()
+        new_track = Track(track_data)
+        if track:
+            db.session.merge(new_track)
+        else:
+            db.session.add(new_track)
+    db.session.commit()
 
 @app.route("/")
 def index():
 
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(
-        scope="user-read-currently-playing playlist-modify-private user-read-private",
+        scope="user-read-currently-playing playlist-read-private playlist-modify-private user-read-private",
         cache_handler=cache_handler,
         show_dialog=True,
     )
@@ -104,28 +117,6 @@ def playlists():
     return render_template("playlists.html", playlists=userplaylists)
 
 
-@app.route("/playlist/<playlist_id>")
-def playlist(playlist_id):
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/")
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
-    playlist_details = get_playlistdetails(spotify, playlist_id)
-    insert_playlist(playlist_details)
-    playlist_name = playlist_details.get("name")
-    trackids = playlist_details.get("tracks").split(";")
-    tracks = [
-        get_trackdetails(
-            spotify,
-            i,
-            usr_filter=["name", "artist_ids", "album_id", "preview_url", "album_image"],
-        )
-        for i in trackids
-    ]
-    return render_template("playlist.html", playlist_name=playlist_name, tracks=tracks)
-
-
 @app.route("/currently_playing")
 def currently_playing():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -149,35 +140,64 @@ def current_user():
     return spotify.current_user()
 
 
+
+################dash################
+EXTERNAL_STYLESHEET = ["/static/css/bootstrap.min.css", "/static/css/styles.css"]
+dash_bp = Blueprint("dashplaylist", __name__, url_prefix="/dashboard/playlist")
 dash_app = dash.Dash(
     __name__,
     server=app,
     url_base_pathname="/dashboard/playlist/",
     external_stylesheets=EXTERNAL_STYLESHEET,
+    assets_folder="/static/css/", suppress_callback_exceptions = True
 )
-dash_app.layout = html.Div(id="dashdashboard")
-dash_bp = Blueprint("dashplaylist", __name__, url_prefix="/dashboard/playlist")
+dash_app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    html.Div(id='page-content')
+])
 
+def render_playlist_layout(playlist_id):
+    # Define your playlist layout here
+    layout = html.Div([
+        html.H1(f"Playlist {playlist_id}"),
+        # Add other components here
+    ])
+    return layout
+ 
 
 @dash_bp.route("/<playlist_id>/")
+
 def dash_playlist(playlist_id):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/")
+        return redirect(url_for("index"))
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     playlist_details = get_playlistdetails(spotify, playlist_id)
     playlist_name = playlist_details.get("name")
-    trackids = playlist_details.get("tracks").split(";")
+    trackids = playlist_details.get("track_ids")
     tracks = [
         get_trackdetails(
             spotify,
             i,
-            usr_filter=["name", "artist_ids", "album_id", "preview_url", "album_image"],
+            playlist_id=playlist_id
         )
         for i in trackids
     ]
-    dash_app.layout = render_dashplaylistlayout(playlist_name, tracks)
+    tracks_audio_feature = get_audio_features_df(spotify, trackids)
+    merged = pd.DataFrame(tracks).merge(tracks_audio_feature, on="id")
+    insert_or_update_tracks(merged.to_dict("records"))
+    tracks = Track.query.filter_by(playlist_id=playlist_id).all()
+    dash_app.layout = render_dashplaylistlayout(tracks, playlist_name)
+
+    @dash_app.callback(Output("card_content", "children"),
+                       Input("playlist-accordion", "value"))
+    def gen_card_widget(track_id, prevent_inital_call=True):
+        if track_id:
+            track = Track.query.get(track_id)
+            return gen_card(track)
+
+    # Return the rendered playlist dashboard
     return dash_app.index()
 
 
@@ -189,6 +209,6 @@ Following lines allow application to be run more conveniently with
 """
 if __name__ == "__main__":
     with app.app_context():
-        # db.drop_all()
+        #db.drop_all()
         db.create_all()
     app.run(threaded=True, port=5000, debug=True)

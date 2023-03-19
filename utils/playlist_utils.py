@@ -8,7 +8,7 @@ def get_playlistdetails(spotify_client, playlist_id):
     filtered["external_urls"] = result.get("external_urls").get("spotify")
     tracks = result.get("tracks").get("items")
     trackids = [i.get("track").get("id") for i in tracks]# gets a list of track objects
-    usr_tracks = {"tracks":";".join(trackids)}
+    usr_tracks = {"track_ids":trackids}
     filtered.update(usr_tracks)
     owner = result.get("owner")
     owner = {"user_id": owner.get("id")}

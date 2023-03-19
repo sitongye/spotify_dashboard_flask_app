@@ -3,3 +3,8 @@
 __pycache__/
 .vscode/
 instance/
+*.csv
+*.db
+.cache
+.DS_Store
+dash_debug copy.py
